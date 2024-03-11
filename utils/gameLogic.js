@@ -86,9 +86,7 @@ const validateBoundary = (pos)=>{
         && pos[0]<8 ) && (pos[1]>=0 && pos[1]<8));
 }
 
-const isEmpty = (board,coordinates)=>{
-    return Object.keys(board[coordinates[0]][coordinates[1]]).length===0;
-}
+const isEmpty = (board,coordinates)=> (Object.keys(board[coordinates[0]][coordinates[1]]).length===0);
 
 // 0 is error 
 // 1 is enpassant 
@@ -97,12 +95,13 @@ const isEmpty = (board,coordinates)=>{
 // 4 normal moves
 
 const detectTypeOfMove = (board,lastboard,move,color)=>{
+    // console.log(move);
     if(isEmpty(board,[move[0],move[1]]))
         return 0;
     
     let direction = (color)?(-1):(1);
     if(board[move[0]][move[1]].piece==='Pawn' && Math.abs(move[1]-move[3])===1 && Math.abs(move[0]-move[2])===1){
-        if(isEmpty(board,[move[2],move[3]] && !isEmpty(board,[move[0],move[3]] && board[move[0]][move[3]].piece==='Pawn' && isEmpty(lastboard,[move[0],move[3]] && validateBoundary([move[0]+direction*2,move[3]]) && !isEmpty(lastboard,[move[0] + direction*2,move[3]]) && lastboard[move[0]+2*direction][move[3]].piece==='Pawn'))))
+        if(isEmpty(board,[move[2],move[3]]) && !isEmpty(board,[move[0],move[3]] && board[move[0]][move[3]].piece==='Pawn' && isEmpty(lastboard,[move[0],move[3]]) && validateBoundary([move[0]+direction*2,move[3]]) && !isEmpty(lastboard,[move[0] + direction*2,move[3]]) && lastboard[move[0]+2*direction][move[3]].piece==='Pawn'))
             return 1;
     }
 
@@ -120,7 +119,7 @@ const makeMoveWithoutValidation = (board,lastboard,move,color)=>{
     let type = detectTypeOfMove(board,lastboard,move,color);
     switch(type){
         case 0:{
-            
+            console.log("Errorrr try again");
             break;
         };
         case 1:{
@@ -221,22 +220,22 @@ const UnCheckedMoves = (piece)=>{
 
                         // double jump move 
                         // console.log(validateBoundary([initialPos[0]+2*direction,initialPos[1]]) , isEmpty(board,[initialPos[0]+2*direction,initialPos[1]]) , (!piece.hasMoved));
-                        if(validateBoundary([initialPos[0]+2*direction,initialPos[1]]) && isEmpty(board,[initialPos[0]+2*direction,initialPos[1]]) && (!piece.hasMoved)){
+                        if(validateBoundary([initialPos[0]+2*direction,initialPos[1]]) && isEmpty(board,[initialPos[0]+2*direction,initialPos[1]]) && (!board[initialPos[0]][initialPos[1]].hasMoved)){
                             movesArray.push([...initialPos,initialPos[0]+2*direction,initialPos[1]]);
                         }
                     }
                     // cutting move in diagonal
-                    if(validateBoundary([initialPos[0]+direction,initialPos[1]+direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]+direction]) && board[initialPos[0]+direction,initialPos[1]+direction].color!==piece.color){
+                    if(validateBoundary([initialPos[0]+direction,initialPos[1]+direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]+direction]) && board[initialPos[0]+direction,initialPos[1]+direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]+direction]);
                     }
                     // cutting move in diagonal
-                    if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction,initialPos[1]-direction].color!==piece.color){
+                    if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction,initialPos[1]-direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]-direction]);
                     }
                     
 
                     // handling en-passant is left 
-                    checkforEnpassant(board,lastboard,piece.color).forEach((move)=>{
+                    checkforEnpassant(board,lastboard,board[initialPos[0]][initialPos[1]].color).forEach((move)=>{
                         if(move[0]===initialPos[0] && move[1]===initialPos[1])
                             movesArray.push(move);
                     });
@@ -256,7 +255,7 @@ const UnCheckedMoves = (piece)=>{
                             if(validateBoundary([initialPos[0] + direction[j]*i,initialPos[1] + direction[j+1]*i]) && isEmpty(board,[initialPos[0]+direction[j]*i,initialPos[1] + direction[j+1]*i]))
                                 movesArray.push([...initialPos,initialPos[0] + direction[j]*i,initialPos[1] + direction[j+1]*i]);
                             else if(validateBoundary([initialPos[0]+direction[j]*i,initialPos[1]+direction[j+1]*i])){
-                                if(piece.color !== board[initialPos[0]+direction[j]*i][initialPos[1]+direction[j+1]*i].color)
+                                if(board[initialPos[0]][initialPos[1]].color !== board[initialPos[0]+direction[j]*i][initialPos[1]+direction[j+1]*i].color)
                                     movesArray.push([...initialPos,initialPos[0]+direction[j]*i,initialPos[1]+direction[j+1]*i])
                                 break;
                             }
@@ -279,7 +278,7 @@ const UnCheckedMoves = (piece)=>{
                             if(validateBoundary([initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]) && isEmpty(board,[initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]))
                                 movesArray.push([...initialPos,initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]);
                             else if(validateBoundary[[initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]]){
-                                if(piece.color !== board[initialPos[0] + direction[2*j]*i][initialPos[1]+direction[2*j+1]*i].color)
+                                if(board[initialPos[0]][initialPos[1]].color !== board[initialPos[0] + direction[2*j]*i][initialPos[1]+direction[2*j+1]*i].color)
                                     movesArray.push([...initialPos,initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]);
                                 break;  
                             }
@@ -299,7 +298,7 @@ const UnCheckedMoves = (piece)=>{
                     let jumps = [2,1,2];
                     for(let j = 0;j<4;j++){
                         for(let i = 0;i<2;i++){
-                            if(validateBoundary([initialPos[0] + direction[j]*jumps[i],initialPos[1] + direction[j+1]*jumps[i+1]]) && (board[initialPos[0]+direction[j]*jumps[i]][initialPos[1] + direction[j+1]*jumps[i+1]].color!==piece.color))
+                            if(validateBoundary([initialPos[0] + direction[j]*jumps[i],initialPos[1] + direction[j+1]*jumps[i+1]]) && (board[initialPos[0]+direction[j]*jumps[i]][initialPos[1] + direction[j+1]*jumps[i+1]].color!==board[initialPos[0]][initialPos[1]].color))
                                 movesArray.push([...initialPos,initialPos[0] + direction[j]*jumps[i],initialPos[1] + direction[j+1]*jumps[i+1]]);
                         }
                     }
@@ -313,10 +312,9 @@ const UnCheckedMoves = (piece)=>{
                     let movesArray = [];
                     let direction = [1,0,-1,0,0,1,0,-1,1,1,-1,-1,1,-1,-1,1];
                     for (let j=0;j<8;j++){
-                        if(validateBoundary([initialPos[0]+direction[2*j],initialPos[1]+direction[2*j+1]]) && (board[initialPos[0]+direction[2*j]][initialPos[1]+direction[2*j+1]].color !== piece.color))
+                        if(validateBoundary([initialPos[0]+direction[2*j],initialPos[1]+direction[2*j+1]]) && (board[initialPos[0]+direction[2*j]][initialPos[1]+direction[2*j+1]].color !== board[initialPos[0]][initialPos[1]].color))
                             movesArray.push([...initialPos,initialPos[0]+direction[2*j],initialPos[1]+direction[2*j+1]])
                     }
-                    // castling is yet to be done
                     return movesArray;
                 }
             )
@@ -344,17 +342,14 @@ const findAllUnvalidated = (board,color)=>{
 }
 
 const checkForCheck = (board,color)=>{
-    
-    ;
     // suppose that we need to check for the check on the white king then.
     // find the position of white king first;
     let kingPos = [];
     for(let i = 0;i<8;i++)
         for(let j = 0;j<8;j++)
-            if(!isEmpty(board,[i,j]) && board[i][j].color === color && board[i][j].piece === 'King')
+            if(!isEmpty(board,[i,j]) && board[i][j].color == color && board[i][j].piece === 'King')
                 kingPos = [i,j];
     // we will find out the all the unvalidated moves of the other color piece if any one of then is pointing to king thhhen its a check 
-    
     if(kingPos.length === 0)
         console.log("The king wasn't found");
 
@@ -370,12 +365,11 @@ const checkForCheck = (board,color)=>{
 
 const checkForCastle = (board,color)=>{
     let row = (color)?(7):(0);
-    // let kingCompare = {piece:'King',color,hasMoved:false}; 
     let returnArray = [];
-    if(board[row][4].hasMoved)
+    if(isEmpty(board,[row,4]) || board[row][4].hasMoved)
         return returnArray;
 
-    let arrayToCheck = findAllUnvalidated(board,!color).filter((movePos)=> movePos[0]===row);
+    let arrayToCheck = findAllUnvalidated(board,!color).filter((movePos)=> movePos[2]===row);
     let dummyArray = new Array(8,0);
     arrayToCheck.forEach((move)=>{dummyArray[move[3]]=1});
 
@@ -383,7 +377,7 @@ const checkForCastle = (board,color)=>{
     [0,7].forEach((value)=>{
         if(!isEmpty(board,[row,value]) && !board[row][value].hasMoved){
             let flag = true;
-            for(i;i<(value)?(5):(8);i++)
+            for(i;i<((value)?(7):(5));i++)
                 if(dummyArray[i] || (!isEmpty(board,[row,i]) && (board[row][i].piece!=='King' || board[row][i].color!==color)))
                     flag = false;
             if(flag)
@@ -404,11 +398,18 @@ const funcValidateMove = (board,move,color)=>{
     return true;
 }
 
-const ListOnlyValidMove = (board,color)=> findAllUnvalidated(board,color).filter((moves)=> funcValidateMove(board,moves,color));
+const ListOnlyValidMove = (board,color)=>{ 
+    const GoodMoves = findAllUnvalidated(board,color).filter((moves)=> funcValidateMove(board,moves,color));
+    const castleArray = checkForCastle(board,color);
+    const kingPos = (color)?([7,4]):([0,4]);
+    if(castleArray.indexOf(1) !== -1)
+        GoodMoves.push([...kingPos,kingPos[0],kingPos[1]-2]);
+    if(castleArray.indexOf(1) !== -1)
+        GoodMoves.push([...kingPos,kingPos[0],kingPos[1]+2]);
+    return GoodMoves;
+};
 
-const checkForCheckmate = (board,color)=>{
-    return (ListOnlyValidMove(board,color).length===0);
-}
+const checkForCheckmate = (board,color)=>(ListOnlyValidMove(board,color).length===0);
 
 const restartGame = ()=>{
     board = [
@@ -435,8 +436,8 @@ const GameLogic = async ()=>{
     while(flag && !checkForCheckmate(board,turn)){
         printChessboard(board);
         console.log("Turn is ",turn);
-        console.log("Printing all the unvalidating moves");
-        printArray(findAllUnvalidated(board,turn));
+        console.log("Printing all the validating moves");
+        printArray(ListOnlyValidMove(board,turn));
         const arrays = await takeArrayInput();
         let verify  = makeMove(board,lastboard,arrays,turn);
         if(verify){
@@ -445,7 +446,6 @@ const GameLogic = async ()=>{
         }
         else
             console.log("Some error occured");
-        printChessboard(board);
     }
     console.log("Its Over")
     
