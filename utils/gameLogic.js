@@ -81,9 +81,7 @@ const printArray = (array)=>{
 }
 
 const validateBoundary = (pos)=>{
-    return ((pos[0]>=0 
-        
-        && pos[0]<8 ) && (pos[1]>=0 && pos[1]<8));
+    return ((pos[0]>=0 && pos[0]<8 ) && (pos[1]>=0 && pos[1]<8));
 }
 
 const isEmpty = (board,coordinates)=> (Object.keys(board[coordinates[0]][coordinates[1]]).length===0);
@@ -105,11 +103,10 @@ const detectTypeOfMove = (board,lastboard,move,color)=>{
             return 1;
     }
 
-    let lastRow = (color)?(7):(0);
-    if(board[move[0]][move[1]].piece === 'Pawn' && move[2]===lastRow)
+    let lastRow = (color)?(0):(7);
+    if(board[move[0]][move[1]].piece == 'Pawn' && move[2]==lastRow)
         return 2;
-
-    if(board[move[0]][move[1]].piece === 'King' && move[0]===move[2] &&  Math.abs(move[1]-move[3])==2)
+    if(board[move[0]][move[1]].piece === 'King' && move[0]==move[2] &&  Math.abs(move[1]-move[3])==2)
         return 3;
     
     return 4;
@@ -123,51 +120,48 @@ const makeMoveWithoutValidation = (board,lastboard,move,color)=>{
             break;
         };
         case 1:{
-            lastboard = board;
+            lastboard = board.map(row => row.map(obj => ({ ...obj })));
             board[move[2]][move[3]] = board[move[0]][move[1]];
             board[move[0]][move[1]] = {};
             board[move[0]][move[3]] = {};
             board[move[2]][move[3]].hasMoved = true;
+            break;
         }
         case 2:{
-            lastboard = board;
+            lastboard = board.map(row => row.map(obj => ({ ...obj })));
             board[move[0]][move[1]] = {};
             board[move[2]][move[2]] = {piece:'Queen',color,hasMoved:false};
             board[move[2]][move[3]].hasMoved = true;
+            break;
         }
         case 3:{
-            lastboard = board;
+            lastboard = board.map(row => row.map(obj => ({ ...obj })));
             let rookPos = (move[1]-move[3] > 0)?(0):(7);
+            let direct  = (rookPos)?(-1):(1);
             board[move[2]][move[3]] = board[move[0]][move[1]];
-            board[move[2]][(Math.floor((move[1]+move[3])/2))] = board[move[2]][rookPos];
+            board[move[2]][move[3]+direct] = board[move[2]][rookPos];
             board[move[2]][move[3]] = {};
-            board[move[2]][(Math.floor((move[1]+move[3])/2))] = {};
+            board[move[2]][rookPos] = {};
             board[move[2]][move[3]].hasMoved = true;
-            board[move[2]][(Math.floor((move[1]+move[3])/2))],hasMoved = true;
+            board[move[2]][(Math.floor((move[1]+move[3])/2))].hasMoved = true;
+            break;
         }
         default:{
-            lastboard  = board;
+            lastboard  = board.map(row => row.map(obj => ({ ...obj })));
             board[move[2]][move[3]] = board[move[0]][move[1]];
             board[move[0]][move[1]] = {};
             board[move[2]][move[3]].hasMoved = true;
+            break;
         }
     }
-
-    
-    ;
 }
 
 const makeMove = (board , lastboard, move,color)=>{
-    printArray(move);
     const moveList = ListOnlyValidMove(board,color);
-    // now check our move in the list 
-    
-    printArray(moveList);
-
     for(let i =0;i<moveList.length;i++){
         let flag = true;
         for(let j = 0;j<4;j++)
-            if(moveList[i][j] !== move[j])
+            if(moveList[i][j] != move[j])
                 flag = false;
         if(flag){
             makeMoveWithoutValidation(board,lastboard,move,color);
@@ -210,7 +204,7 @@ const UnCheckedMoves = (piece)=>{
     switch(piece.piece){
         case 'Pawn':
             return (
-                (initialPos)=>{
+                (initialPos,board)=>{
                     
                     let movesArray = [];
                     let direction = (piece.color)?(-1):(1);
@@ -232,8 +226,6 @@ const UnCheckedMoves = (piece)=>{
                     if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction,initialPos[1]-direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]-direction]);
                     }
-                    
-
                     // handling en-passant is left 
                     checkforEnpassant(board,lastboard,board[initialPos[0]][initialPos[1]].color).forEach((move)=>{
                         if(move[0]===initialPos[0] && move[1]===initialPos[1])
@@ -246,12 +238,11 @@ const UnCheckedMoves = (piece)=>{
             )
         case 'Bishop':
             return (
-                (initialPos)=>{ 
-                    
+                (initialPos,board)=>{ 
                     let movesArray = [];
                     let direction = [-1,1,1,-1,-1];
-                    for(let j = 0;j<4;j++){
-                        for(let i = 1;i<8;i++){
+                    for(let j=0;j<4;j++){
+                        for(let i=1;i<8;i++){
                             if(validateBoundary([initialPos[0] + direction[j]*i,initialPos[1] + direction[j+1]*i]) && isEmpty(board,[initialPos[0]+direction[j]*i,initialPos[1] + direction[j+1]*i]))
                                 movesArray.push([...initialPos,initialPos[0] + direction[j]*i,initialPos[1] + direction[j+1]*i]);
                             else if(validateBoundary([initialPos[0]+direction[j]*i,initialPos[1]+direction[j+1]*i])){
@@ -269,7 +260,7 @@ const UnCheckedMoves = (piece)=>{
             )
         case 'Rook':
             return (
-                (initialPos)=>{
+                (initialPos,board)=>{
                     
                     let movesArray = [];
                     let direction = [1,0,0,1,-1,0,0,-1];
@@ -291,14 +282,14 @@ const UnCheckedMoves = (piece)=>{
             )
         case 'Knight':
             return (
-                (initialPos)=>{
+                (initialPos,board)=>{
                     
                     let movesArray = [];
                     let direction = [-1,1,1,-1,-1];
                     let jumps = [2,1,2];
                     for(let j = 0;j<4;j++){
                         for(let i = 0;i<2;i++){
-                            if(validateBoundary([initialPos[0] + direction[j]*jumps[i],initialPos[1] + direction[j+1]*jumps[i+1]]) && (board[initialPos[0]+direction[j]*jumps[i]][initialPos[1] + direction[j+1]*jumps[i+1]].color!==board[initialPos[0]][initialPos[1]].color))
+                            if(validateBoundary([initialPos[0] + direction[j]*jumps[i],initialPos[1] + direction[j+1]*jumps[i+1]]) && (board[initialPos[0]+direction[j]*jumps[i]][initialPos[1] + direction[j+1]*jumps[i+1]].color!=board[initialPos[0]][initialPos[1]].color))
                                 movesArray.push([...initialPos,initialPos[0] + direction[j]*jumps[i],initialPos[1] + direction[j+1]*jumps[i+1]]);
                         }
                     }
@@ -307,8 +298,7 @@ const UnCheckedMoves = (piece)=>{
             )
         case 'King':
             return (
-                (initialPos)=>{
-                    
+                (initialPos,board)=>{
                     let movesArray = [];
                     let direction = [1,0,-1,0,0,1,0,-1,1,1,-1,-1,1,-1,-1,1];
                     for (let j=0;j<8;j++){
@@ -320,10 +310,10 @@ const UnCheckedMoves = (piece)=>{
             )
         case 'Queen':
             return (
-                (initialPos)=>{
+                (initialPos,board)=>{
                     
-                    let movesArray = UnCheckedMoves({hasMoved:true,color:piece.color,piece:'Bishop'})(initialPos);
-                    movesArray = movesArray.concat(UnCheckedMoves({piece:'Rook',color:piece.color,hasMoved:true})(initialPos));
+                    let movesArray = UnCheckedMoves({hasMoved:true,color:piece.color,piece:'Bishop'})(initialPos,board);
+                    movesArray = movesArray.concat(UnCheckedMoves({piece:'Rook',color:piece.color,hasMoved:true})(initialPos,board));
                     return movesArray
                 }
             )
@@ -335,7 +325,7 @@ const findAllUnvalidated = (board,color)=>{
     for(let i = 0;i<8;i++){
         for(let j=0;j<8;j++){
             if(!isEmpty(board,[i,j]) && board[i][j].color == color)
-                moveArray = moveArray.concat(UnCheckedMoves(board[i][j])([i,j]));
+                moveArray = moveArray.concat(UnCheckedMoves(board[i][j])([i,j],board));
         }
     }
     return moveArray;
@@ -370,16 +360,22 @@ const checkForCastle = (board,color)=>{
         return returnArray;
 
     let arrayToCheck = findAllUnvalidated(board,!color).filter((movePos)=> movePos[2]===row);
-    let dummyArray = new Array(8,0);
+    console.log("Printing oppposite moves to verify castle");
+    printArray(arrayToCheck);
+    let dummyArray = new Array(8).fill(0);
     arrayToCheck.forEach((move)=>{dummyArray[move[3]]=1});
 
     let i = 1;
     [0,7].forEach((value)=>{
+        let flag = true;
         if(!isEmpty(board,[row,value]) && !board[row][value].hasMoved){
-            let flag = true;
-            for(i;i<((value)?(7):(5));i++)
-                if(dummyArray[i] || (!isEmpty(board,[row,i]) && (board[row][i].piece!=='King' || board[row][i].color!==color)))
+            for(i;i<((value)?(7):(5));i++){
+                if(dummyArray[i]){
+                    flag = false; 
+                }
+                else if(!isEmpty(board,[row,i]) && !(board[row][i].piece=='King' && board[row][i].color==color))
                     flag = false;
+            }
             if(flag)
                 returnArray.push((value==0)?(1):(2));
         }
@@ -389,10 +385,9 @@ const checkForCastle = (board,color)=>{
 } 
 
 const funcValidateMove = (board,move,color)=>{
-    
     let dummyBoard =  board.map(row => row.map(obj => ({ ...obj })));
-    let dummyLastBoard =  board.map(row => row.map(obj => ({ ...obj })));
-    makeMoveWithoutValidation(dummyBoard,dummyLastBoard,move);
+    let dummyLastBoard =  lastboard.map(row => row.map(obj => ({ ...obj })));
+    makeMoveWithoutValidation(dummyBoard,dummyLastBoard,move,color);
     if(checkForCheck(dummyBoard,color))
         return false;
     return true;
@@ -404,7 +399,7 @@ const ListOnlyValidMove = (board,color)=>{
     const kingPos = (color)?([7,4]):([0,4]);
     if(castleArray.indexOf(1) !== -1)
         GoodMoves.push([...kingPos,kingPos[0],kingPos[1]-2]);
-    if(castleArray.indexOf(1) !== -1)
+    if(castleArray.indexOf(2) !== -1)
         GoodMoves.push([...kingPos,kingPos[0],kingPos[1]+2]);
     return GoodMoves;
 };
@@ -433,7 +428,7 @@ const GameLogic = async ()=>{
     restartGame();
     let flag = true;
 
-    while(flag && !checkForCheckmate(board,turn)){
+    while(flag){
         printChessboard(board);
         console.log("Turn is ",turn);
         console.log("Printing all the validating moves");
@@ -446,9 +441,26 @@ const GameLogic = async ()=>{
         }
         else
             console.log("Some error occured");
+        flag = !checkForCheckmate(board,turn)
     }
+    printChessboard(board);
     console.log("Its Over")
     
 }
 
-GameLogic();
+// GameLogic();
+
+let dummy = [
+    
+    [{},{},{},{},{},{},{},{}],
+    [makePiece("Pawn",1),{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{}],
+    [makePiece('Pawn',1),makePiece('Pawn',1),{},makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1)],
+    [makePiece('Rook',1),makePiece('Knight',1),makePiece('Bishop',1),{},makePiece('King',1),makePiece('Bishop',1),makePiece('Knight',1),makePiece('Rook',1)],
+]
+
+console.log(makeMove(dummy,dummy,[1,0,0,0],1));
+printChessboard(dummy);
