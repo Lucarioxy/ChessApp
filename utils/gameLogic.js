@@ -20,6 +20,21 @@ function takeArrayInput() {
     });
 }
 
+const deepEqual = (obj1, obj2)=> {
+    if (obj1 === obj2) return true;
+    if (typeof obj1 != "object" || typeof obj2 != "object" || obj1 == null || obj2 == null) return false;
+    
+    let keys1 = Object.keys(obj1);
+    let keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) return false;
+
+    for (let key of keys1) {
+        if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) return false;
+    }
+
+    return true;
+}
 
 const makePiece = (name,color)=>{
     let piece = {
@@ -93,22 +108,19 @@ const isEmpty = (board,coordinates)=> (Object.keys(board[coordinates[0]][coordin
 // 4 normal moves
 
 const detectTypeOfMove = (board,lastboard,move,color)=>{
-    // console.log(move);
     if(isEmpty(board,[move[0],move[1]]))
         return 0;
-    
     let direction = (color)?(-1):(1);
     if(board[move[0]][move[1]].piece==='Pawn' && Math.abs(move[1]-move[3])===1 && Math.abs(move[0]-move[2])===1){
-        if(isEmpty(board,[move[2],move[3]]) && !isEmpty(board,[move[0],move[3]] && board[move[0]][move[3]].piece==='Pawn' && isEmpty(lastboard,[move[0],move[3]]) && validateBoundary([move[0]+direction*2,move[3]]) && !isEmpty(lastboard,[move[0] + direction*2,move[3]]) && lastboard[move[0]+2*direction][move[3]].piece==='Pawn'))
-            return 1;
+        if(isEmpty(board,[move[2],move[3]]) && !isEmpty(board,[move[0],move[3]]) && board[move[0]][move[3]].piece==='Pawn' && isEmpty(lastboard,[move[0],move[3]]) && validateBoundary([move[0]+direction*2,move[3]]) && !isEmpty(lastboard,[move[0] + direction*2,move[3]]) && lastboard[move[0]+2*direction][move[3]].piece==='Pawn')
+        return 1;
     }
-
     let lastRow = (color)?(0):(7);
     if(board[move[0]][move[1]].piece == 'Pawn' && move[2]==lastRow)
         return 2;
     if(board[move[0]][move[1]].piece === 'King' && move[0]==move[2] &&  Math.abs(move[1]-move[3])==2)
         return 3;
-    
+        
     return 4;
 }
 
@@ -120,7 +132,6 @@ const makeMoveWithoutValidation = (board,lastboard,move,color)=>{
             break;
         };
         case 1:{
-            lastboard = board.map(row => row.map(obj => ({ ...obj })));
             board[move[2]][move[3]] = board[move[0]][move[1]];
             board[move[0]][move[1]] = {};
             board[move[0]][move[3]] = {};
@@ -128,22 +139,20 @@ const makeMoveWithoutValidation = (board,lastboard,move,color)=>{
             break;
         }
         case 2:{
-            lastboard = board.map(row => row.map(obj => ({ ...obj })));
             board[move[0]][move[1]] = {};
             board[move[2]][move[2]] = {piece:'Queen',color,hasMoved:false};
             board[move[2]][move[3]].hasMoved = true;
             break;
         }
         case 3:{
-            lastboard = board.map(row => row.map(obj => ({ ...obj })));
             let rookPos = (move[1]-move[3] > 0)?(0):(7);
             let direct  = (rookPos)?(-1):(1);
             board[move[2]][move[3]] = board[move[0]][move[1]];
             board[move[2]][move[3]+direct] = board[move[2]][rookPos];
-            board[move[2]][move[3]] = {};
+            board[move[0]][move[1]] = {};
             board[move[2]][rookPos] = {};
             board[move[2]][move[3]].hasMoved = true;
-            board[move[2]][(Math.floor((move[1]+move[3])/2))].hasMoved = true;
+            board[move[2]][move[3]+direct].hasMoved = true;
             break;
         }
         default:{
@@ -173,10 +182,10 @@ const makeMove = (board , lastboard, move,color)=>{
 
 const checkforEnpassant = (board,lastboard,color)=>{
     
-    let changeInBoard = new Array(4,null);
+    let changeInBoard = new Array(4).fill(null);
     for(let i = 0;i<8;i++){
         for(let j=0;j<8;j++){
-            if(board[i][j] !== lastboard[i][j]){
+            if(!deepEqual(board[i][j],lastboard[i][j])){
                 if(isEmpty(board,[i,j])){
                     changeInBoard[0] = i;
                     changeInBoard[1] = j;
@@ -188,16 +197,16 @@ const checkforEnpassant = (board,lastboard,color)=>{
             }
         }
     }
-
     for(let i=0;i<4;i++) if(changeInBoard[i]===null) return [];
-    if(board[changeInBoard[2]][changeInBoard[3]].piece !== 'Pawn' || board[changeInBoard[0]][changeInBoard[1]].color==color || changeInBoard[1]!==changeInBoard[3] || (Math.abs(changeInBoard[0]-changeInBoard[1] !== 2))) return [];
 
-    let toReturnArray = []; 
-    let direction = (color)?(1):(-1);
+    if(board[changeInBoard[2]][changeInBoard[3]].piece !== 'Pawn' || board[changeInBoard[2]][changeInBoard[3]].color==color || changeInBoard[1]!==changeInBoard[3] || (Math.abs(changeInBoard[0]-changeInBoard[2]) !== 2)) return [];
+    let toReturnArray = [];
+    let direction = (color)?(-1):(1);
     [-1,1].forEach((dx)=>{
         if(validateBoundary([changeInBoard[2]+direction,changeInBoard[3]+dx]) && board[changeInBoard[2]][changeInBoard[3]+dx].piece==='Pawn' && board[changeInBoard[2]][changeInBoard[3]+dx].color==color)
             toReturnArray.push([changeInBoard[2],changeInBoard[3]+dx,changeInBoard[2]+direction,changeInBoard[3]]);
     })
+    return toReturnArray;
 }
 
 const UnCheckedMoves = (piece)=>{
@@ -211,9 +220,6 @@ const UnCheckedMoves = (piece)=>{
                     // normal move straight
                     if(validateBoundary([initialPos[0]+direction,initialPos[1]]) && isEmpty(board,[initialPos[0]+direction,initialPos[1]])){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]]);
-
-                        // double jump move 
-                        // console.log(validateBoundary([initialPos[0]+2*direction,initialPos[1]]) , isEmpty(board,[initialPos[0]+2*direction,initialPos[1]]) , (!piece.hasMoved));
                         if(validateBoundary([initialPos[0]+2*direction,initialPos[1]]) && isEmpty(board,[initialPos[0]+2*direction,initialPos[1]]) && (!board[initialPos[0]][initialPos[1]].hasMoved)){
                             movesArray.push([...initialPos,initialPos[0]+2*direction,initialPos[1]]);
                         }
@@ -226,13 +232,11 @@ const UnCheckedMoves = (piece)=>{
                     if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction,initialPos[1]-direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]-direction]);
                     }
-                    // handling en-passant is left 
+
                     checkforEnpassant(board,lastboard,board[initialPos[0]][initialPos[1]].color).forEach((move)=>{
                         if(move[0]===initialPos[0] && move[1]===initialPos[1])
                             movesArray.push(move);
                     });
-
-                    // pawn Promotion is left
                     return movesArray;
                 }
             )
@@ -360,8 +364,6 @@ const checkForCastle = (board,color)=>{
         return returnArray;
 
     let arrayToCheck = findAllUnvalidated(board,!color).filter((movePos)=> movePos[2]===row);
-    console.log("Printing oppposite moves to verify castle");
-    printArray(arrayToCheck);
     let dummyArray = new Array(8).fill(0);
     arrayToCheck.forEach((move)=>{dummyArray[move[3]]=1});
 
@@ -404,7 +406,7 @@ const ListOnlyValidMove = (board,color)=>{
     return GoodMoves;
 };
 
-const checkForCheckmate = (board,color)=>(ListOnlyValidMove(board,color).length===0);
+const checkForStalemate = (board,color)=>(ListOnlyValidMove(board,color).length===0);
 
 const restartGame = ()=>{
     board = [
@@ -434,26 +436,44 @@ const GameLogic = async ()=>{
         console.log("Printing all the validating moves");
         printArray(ListOnlyValidMove(board,turn));
         const arrays = await takeArrayInput();
+        let dummyLastBoard = board.map(row => row.map(obj => ({ ...obj })));
         let verify  = makeMove(board,lastboard,arrays,turn);
         if(verify){
             turn = !turn;
+            lastboard = dummyLastBoard;
             console.log("Verified");
         }
         else
             console.log("Some error occured");
-        flag = !checkForCheckmate(board,turn)
+        flag = !checkForStalemate(board,turn);
+        if(!flag){
+            if(checkForCheck(board,turn))
+                console.log(`The Player ${!turn} Won`);
+            else
+                console.log("Draww");
+        }
     }
+    printChessboard(lastboard);
     printChessboard(board);
     console.log("Its Over")
     
 }
 
-// GameLogic();
+GameLogic();
 
 let dummy = [
-    
+    [makePiece('Rook',0),makePiece('Knight',0),makePiece('Bishop',0),makePiece('Queen',0),makePiece('King',0),makePiece('Bishop',0),makePiece('Knight',0),makePiece('Rook',0)],
+    [makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0)],
     [{},{},{},{},{},{},{},{}],
-    [makePiece("Pawn",1),{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{}],
+    [makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1)],
+    [makePiece('Rook',1),makePiece('Knight',1),makePiece('Bishop',1),{},makePiece('King',1),makePiece('Bishop',1),makePiece('Knight',1),makePiece('Rook',1)],
+]
+let dummyLastBoard = [
+    [makePiece('Rook',0),makePiece('Knight',0),makePiece('Bishop',0),makePiece('Queen',0),makePiece('King',0),makePiece('Bishop',0),makePiece('Knight',0),makePiece('Rook',0)],
+    [makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0)],
     [{},{},{},{},{},{},{},{}],
     [{},{},{},{},{},{},{},{}],
     [{},{},{},{},{},{},{},{}],
@@ -462,5 +482,5 @@ let dummy = [
     [makePiece('Rook',1),makePiece('Knight',1),makePiece('Bishop',1),{},makePiece('King',1),makePiece('Bishop',1),makePiece('Knight',1),makePiece('Rook',1)],
 ]
 
-console.log(makeMove(dummy,dummy,[1,0,0,0],1));
-printChessboard(dummy);
+// console.log(makeMove(dummy,dummy,[1,0,0,0],1));
+// printChessboard(dummy);
