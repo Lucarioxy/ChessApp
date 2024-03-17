@@ -1,11 +1,7 @@
-import Img from '../images/ChessIMG.jpg';
-import Img2 from '../images/knight-logo.jpg';
+import Img from './images/ChessIMG.jpg';
+import Img2 from './images/knight-logo.jpg';
 
-<<<<<<< Updated upstream
 const HomePage=()=>{
-=======
-const HomePage = ()=>{
->>>>>>> Stashed changes
     return(
     <div className= "bg-black flex relative">
         <img src={Img} alt="" className = "object-cover h-130 w-240 py-32" />
