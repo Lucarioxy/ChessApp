@@ -1,13 +1,11 @@
 import Img from '../images/ChessIMG.jpg';
 import Img2 from '../images/knight-logo.jpg';
-import Overlay from './Overlay';
 
-function HomePage(){
-    const [isOpen, setIsOpen] = useState(false);
-
-    const toggleOverlay = () => {
-      setIsOpen(!isOpen);
-    };
+<<<<<<< Updated upstream
+const HomePage=()=>{
+=======
+const HomePage = ()=>{
+>>>>>>> Stashed changes
     return(
     <div className= "bg-black flex relative">
         <img src={Img} alt="" className = "object-cover h-130 w-240 py-32" />
@@ -20,8 +18,7 @@ function HomePage(){
                 <button className = "bg-black rounded-md h-12 w-64">Play Online</button>
                 <button className = "bg-black rounded-md h-12 w-64">Computer</button>
                 <button className = "bg-black rounded-md h-12 w-64">Chess Variants</button>
-                <button onClick={toggleOverlay} className = "bg-black rounded-md h-12 w-64">Create Custom Game</button>
-                <Overlay isOpen={isOpen} onClose={toggleOverlay}/>
+                <button  className = "bg-black rounded-md h-12 w-64">Create Custom Game</button>
             </div>
         </div>
     </div>
