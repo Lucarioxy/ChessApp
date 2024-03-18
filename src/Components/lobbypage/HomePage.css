@@ -1,0 +1,12 @@
+/* *{
+  background-color: black;
+} */
+.title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 40px;
+}
+.ff{
+  color : 'blue';
+}
