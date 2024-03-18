@@ -225,11 +225,11 @@ const UnCheckedMoves = (piece)=>{
                         }
                     }
                     // cutting move in diagonal
-                    if(validateBoundary([initialPos[0]+direction,initialPos[1]+direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]+direction]) && board[initialPos[0]+direction,initialPos[1]+direction].color!==board[initialPos[0]][initialPos[1]].color){
+                    if(validateBoundary([initialPos[0]+direction,initialPos[1]+direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]+direction]) && board[initialPos[0]+direction][initialPos[1]+direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]+direction]);
                     }
                     // cutting move in diagonal
-                    if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction,initialPos[1]-direction].color!==board[initialPos[0]][initialPos[1]].color){
+                    if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction][initialPos[1]-direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]-direction]);
                     }
 
@@ -453,34 +453,9 @@ const GameLogic = async ()=>{
                 console.log("Draww");
         }
     }
-    printChessboard(lastboard);
     printChessboard(board);
     console.log("Its Over")
     
 }
 
 GameLogic();
-
-let dummy = [
-    [makePiece('Rook',0),makePiece('Knight',0),makePiece('Bishop',0),makePiece('Queen',0),makePiece('King',0),makePiece('Bishop',0),makePiece('Knight',0),makePiece('Rook',0)],
-    [makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0)],
-    [{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{}],
-    [makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1)],
-    [makePiece('Rook',1),makePiece('Knight',1),makePiece('Bishop',1),{},makePiece('King',1),makePiece('Bishop',1),makePiece('Knight',1),makePiece('Rook',1)],
-]
-let dummyLastBoard = [
-    [makePiece('Rook',0),makePiece('Knight',0),makePiece('Bishop',0),makePiece('Queen',0),makePiece('King',0),makePiece('Bishop',0),makePiece('Knight',0),makePiece('Rook',0)],
-    [makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0)],
-    [{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{}],
-    [makePiece('Pawn',1),makePiece('Pawn',1),{},makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1),makePiece('Pawn',1)],
-    [makePiece('Rook',1),makePiece('Knight',1),makePiece('Bishop',1),{},makePiece('King',1),makePiece('Bishop',1),makePiece('Knight',1),makePiece('Rook',1)],
-]
-
-// console.log(makeMove(dummy,dummy,[1,0,0,0],1));
-// printChessboard(dummy);
