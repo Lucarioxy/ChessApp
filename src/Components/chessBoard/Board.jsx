@@ -1,6 +1,6 @@
 import "./Board.css";
 import Tile from "./Tile/Tile";
-
+import Timer from './Timer';
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
@@ -11,7 +11,7 @@ peices.push({ image: "Assets/images/pawn_b.png", x: i, y: 6 });
 
 for(let i=0;i<8;i++){
   peices.push({ image: "Assets/images/pawn_w.png", x: i, y: 1 });
-  }
+}
 
 peices.push({image:"Assets/images/rook_b.png",x:0,y:7})
 peices.push({image:"Assets/images/rook_b.png",x:7,y:7})
@@ -36,8 +36,7 @@ peices.push({image:"Assets/images/queen_w.png",x:3,y:0})
 
 
 
-export default function Board() {
-
+export default function Board() { 
   let board = [];
 
   for (let j = verticalAxis.length - 1; j >= 0; j--) {
@@ -52,5 +51,10 @@ export default function Board() {
     }
   }
 
-  return <div id="Board">{board}</div>;
+  return<div>
+        <div id="Board" className="absolute px-96 h-52">{board}</div>
+        <div className = "absolute px-16 pt-96">
+          <Timer seconds={30}/> 
+        </div>
+        </div>
 }
