@@ -38,7 +38,7 @@ peices.push({image:"Assets/images/queen_w.png",x:3,y:0})
 
 
 const notify = () => {
-  toast.error('🦄 Wow so easy!', {
+  toast.error('Wow so easy!', {
     position: "top-center",
     autoClose: false,
     hideProgressBar: false,
@@ -78,26 +78,31 @@ export default function Board() {
     }
   }
 
-  return<div>
-        <div id="Board" className="place-items-center absolute pt-8 pb-8 px-96">{board}</div>
-        <div className="absolute px-8 py-12">
+  return<div className="bg-yellow-500ChesBoard"> 
+        <div id="Board" className=" flex absolute pt-6 left-96">{board}</div>
+        <div className="absolute top-12 left-16">
           <Timer seconds={30}/>
         </div>
-        <div className="absolute inset-y-1 right-96 top-12">
+        <div className="absolute bottom-44 right-96">
           <Timer seconds={30}/>
         </div>
-        <button onClick = {notify} className="bg-red-500 rounded absolute bottom-2 right-4 px-12 text-black ">Resign</button>
-        <button onClick = {notify1} className="bg-green-700 rounded absolute bottom-2 right-40 px-12 text-black ">Draw</button>
+        <div className="flex flex-col w-24 space-y-6 absolute bottom-96 right-0">
+        <button onClick = {notify} className="bg-red-500 rounded text-black ">RESIGN</button>
+        <button onClick = {notify1} className="bg-green-700 rounded text-black ">DRAW</button>
+        {/* <button onClick = {notify1} className="bg-yellow-700 rounded text-black ">MENU</button> */}
+        
         <ToastContainer
-position="top-center"
-autoClose={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-theme="light"
-transition =  {Bounce}
-/>
+        position="top-center"
+        autoClose={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        theme="light"
+        transition =  {Bounce}
+        />
+        </div>
         </div>
 }
+// absolute bottom-2 right-40 px-12

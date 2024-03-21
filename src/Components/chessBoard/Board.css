@@ -1,3 +1,6 @@
+.ChessBoard{
+    background-color: aqua;
+}
 #Board {
     display: grid;
     grid-template-columns: repeat(8, 85px);
@@ -5,13 +8,3 @@
     width: 800px;
     height: 800px;
 }
-.showSnackbarBttn {
-    width: 200px;
-    height: 50px;
-    background-color: cornflowerblue;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    color: white;
-    font-size: 20px;
-  }
