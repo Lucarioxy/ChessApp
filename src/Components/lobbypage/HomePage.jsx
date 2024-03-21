@@ -6,15 +6,7 @@ import Img2 from './images/knight-logo.jpg';
 
 function HomePage() {
     const [inputValue, setInputValue] = useState("");
-    const [show,setShow] = useState(false) 
-    const ShowRoom =()=> {
-        if(show == true){
-            setShow(false)
-        }
-        else{
-            setShow(true)
-        }
-    }
+
     return (
         <div className="bg-black flex relative">
             <img src={Img} alt="" className="object-cover h-130 w-240 py-32" />
@@ -23,13 +15,11 @@ function HomePage() {
                 <img src={Img2} className="size-20 absolute right-8 top-8" alt="" />
                 <div className="mx-48 my-24 absolute right-32 top-24">
                     <div className="text-white flex flex-col space-y-5 bg-zinc-800 h-96 w-64 justify-center rounded-md">
-                        <h1 className="text-white relative left-10 top-0 text-4xl ">Play Chess!</h1>
+                        <h1 className="text-white relative left-12 top-0 text-4xl">Play Chess!</h1>
                         <button className="bg-black rounded-md h-12 w-64">Play Online</button>
                         
                         
-                        <button onClick={ShowRoom} className="bg-black rounded-md h-12 w-64">Create Custom Game</button>
-                        {show && (<div className='flex flex-col'
-                        >
+                        <button className="bg-black rounded-md h-12 w-64">Create Custom Game</button>
                         <input className='text-black text-center'
                             type="text"
                             placeholder="Copy Room Id from here"
@@ -37,16 +27,10 @@ function HomePage() {
                             onChange={e => setInputValue(e.target.value)}
                         />
                         <CopyToClipboard text={inputValue}>
-                            <button className='mt-4 mb-4'>Copy</button>
+                            <button>Copy</button>
                         </CopyToClipboard>
-
-                        <input className='text-black text-center '
-                            type="text"
-                            placeholder="Paste Room Id from here"
-                            />
                         <button className='mt-4 w-full flex items-center justify-center gap-2 px-5 py-3 font-medium rounded bg-purple-400 '> Join With Id</button>
-                        </div>
-                        )}
+
                     </div>
                 </div>
             </div>
