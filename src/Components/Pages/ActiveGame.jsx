@@ -36,7 +36,7 @@ export default function ActiveGame() {
 
     return(
     <>
-    {(Overlayfunction()) && Overlayfunction()}
+    {/* {(Overlayfunction()) && Overlayfunction()} */}
       <div className="bg-yellow-500ChesBoard">
         <div id="Board" className=" flex justify-center"><Board /></div>
         <div className="absolute top-12 left-16">

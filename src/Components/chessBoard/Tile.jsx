@@ -3,27 +3,28 @@ import { useDrop } from 'react-dnd';
 import TileInner from './TileInner';
 
 export default function Tile({ number ,children}) {
-    const { pickElement,listValidMoves , setDropDestination } = useStateContext();
+    const { pickElement,listValidMoves , setDropDestination ,color,turn} = useStateContext();
 
     const onDropping = async ()=>{
-        // console.log("The function was triggered");
+        // console.log("The function was triggered");s
         const y = Math.floor(number/8);
         const x = number%8;
         const fromy = Math.floor(pickElement/8);
         const fromx = pickElement%8;
         const temp = [fromy,fromx,y,x];
-
-        if(color !== turn)
-            return false;
+        console.log(temp);
 
         listValidMoves.forEach(element => {
             let tem = true;
             for(let a=0;a<4;a++)
                 if(element[a] !== temp[a])
                     tem = false;
-            if(tem)
+            if(tem){
+                console.log(true);
                 return true;
+            }
         });
+        console.log(false);
         return false;
     }
 

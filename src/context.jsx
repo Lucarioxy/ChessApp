@@ -5,8 +5,8 @@ const UserContext = createContext();
 
 export const UserProvider = ({children})=>{
 
-    const [color , setColor] = useState(1);
-    const [turn,setTurn] = useState(1)
+    const [color , setColor] = useState(true);
+    const [turn,setTurn] = useState(true)
     const [timer,setTimer] = useState(300);
     const [role, setRole] = useState('main');
     const [boardState , setBoardState] = useState(board);
