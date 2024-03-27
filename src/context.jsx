@@ -1,5 +1,5 @@
 import React , {createContext, useContext, useEffect, useState} from 'react'
-import { ListOnlyValidMove, board } from '../utils/gameLogic';
+import { ListOnlyValidMove, board, makeMove } from '../utils/gameLogic';
 
 const UserContext = createContext();
 
@@ -12,15 +12,33 @@ export const UserProvider = ({children})=>{
     const [boardState , setBoardState] = useState(board);
     const [lastBoard,setLastBoard] = useState(board);
     const [pickElement, setPickElement] = useState(0);
-    const [dropDestination,SetDropDestination] = useState(0);
+    const [dropDestination,setDropDestination] = useState(null);
     const [listValidMoves,setListValidMoves] = useState([]);
 
     useEffect(()=>{
         setListValidMoves(ListOnlyValidMove(boardState,lastBoard,turn));
-    },[board]);
+    },[boardState,turn,lastBoard]);
+
+    useEffect(()=>{
+        console.log("Something");
+    },[pickElement])
+
+    useEffect(()=>{
+        if(dropDestination!==null){
+        let dummyBoard = boardState.map(row => row.map(obj => ({ ...obj })));
+        let dummyLastBoard = lastBoard.map(row => row.map(obj => ({ ...obj })));
+        const temp = makeMove(dummyBoard,dummyLastBoard,[Math.floor(pickElement/8),pickElement%8,Math.floor(dropDestination/8),dropDestination%8],turn);
+        console.log(temp,turn,[Math.floor(pickElement/8),pickElement%8,Math.floor(dropDestination/8),dropDestination%8]);
+        if(temp){
+            setLastBoard(dummyLastBoard);
+            setBoardState(dummyBoard);
+            setTurn(!turn);
+        }
+    }
+    },[dropDestination])
 
     return (
-        <UserContext.Provider value={{color,timer,role,setColor,setTimer,setRole,boardState,setBoardState,pickElement,setPickElement,SetDropDestination,dropDestination,turn,setTurn,listValidMoves,setListValidMoves}}>
+        <UserContext.Provider value={{color,timer,role,setColor,setTimer,setRole,boardState,setBoardState,pickElement,setPickElement,setDropDestination,dropDestination,turn,setTurn,listValidMoves,setListValidMoves,lastBoard,setLastBoard}}>
             {children}
         </UserContext.Provider>
     )

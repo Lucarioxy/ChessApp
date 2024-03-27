@@ -1,15 +1,15 @@
 import { useStateContext } from '../../context';
-import {isEmpty } from '../../../utils/gameLogic';
+import {isEmpty, makeMove } from '../../../utils/gameLogic';
 import Pieces from './Pieces';
 import { useDrop } from 'react-dnd';
 import { ItemsTypes } from '../../../utils/constants';
 import TileInner from './TileInner';
 
-export default function Tile({ number }) {
-    const { boardState ,pickElement,listValidMoves} = useStateContext();
+export default function Tile({ number ,children}) {
+    const { pickElement,listValidMoves , setDropDestination } = useStateContext();
 
-    const onDropping = ()=>{
-        console.log("The function was triggered");
+    const onDropping = async ()=>{
+        // console.log("The function was triggered");
         const y = Math.floor(number/8);
         const x = number%8;
         const fromy = Math.floor(pickElement/8);
@@ -27,26 +27,29 @@ export default function Tile({ number }) {
         return false;
     }
 
-    const onDrop = ()=>{
-        console.log('sro');
+    const onDrop = async()=>{
+        // here what happens when we can make moves ?? 
+        console.log("It Dropped");
+        setDropDestination(number);
     }
     
     
     const [{isOver, canDrop}, drop] = useDrop(() => ({
-        accept: ItemsTypes.KNIGHT,
+        accept:'piece',
         drop: (item) =>(onDrop()),
         canDrop:()=>onDropping(),
         collect: (monitor) => ({
-            isOver: !!monitor.isOver()
+            isOver: !!monitor.isOver(),
+            canDrop:!!monitor.canDrop(),
         })
-    }),[number])
+    }))
     
     return (
         <div 
         ref={drop}
         className='relative w-full h-full'
         >
-        <TileInner number={number}>{(!isEmpty(boardState,[Math.floor(number/8),number%8])) && <Pieces piece={boardState[Math.floor(number/8)][number%8]} number={number}/>}</TileInner>
+        <TileInner key={number} number={number}>{children}</TileInner>
         </div>
     )
 }
