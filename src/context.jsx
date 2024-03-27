@@ -5,7 +5,7 @@ const UserContext = createContext();
 
 export const UserProvider = ({children})=>{
 
-    const [color , setColor] = useState('white');
+    const [color , setColor] = useState(1);
     const [turn,setTurn] = useState(1)
     const [timer,setTimer] = useState(300);
     const [role, setRole] = useState('main');
@@ -14,6 +14,7 @@ export const UserProvider = ({children})=>{
     const [pickElement, setPickElement] = useState(0);
     const [dropDestination,setDropDestination] = useState(null);
     const [listValidMoves,setListValidMoves] = useState([]);
+    const [game, setGame] = useState(1);
 
     useEffect(()=>{
         setListValidMoves(ListOnlyValidMove(boardState,lastBoard,turn));
@@ -38,7 +39,7 @@ export const UserProvider = ({children})=>{
     },[dropDestination])
 
     return (
-        <UserContext.Provider value={{color,timer,role,setColor,setTimer,setRole,boardState,setBoardState,pickElement,setPickElement,setDropDestination,dropDestination,turn,setTurn,listValidMoves,setListValidMoves,lastBoard,setLastBoard}}>
+        <UserContext.Provider value={{color,timer,role,setColor,setTimer,setRole,boardState,setBoardState,pickElement,setPickElement,setDropDestination,dropDestination,turn,setTurn,listValidMoves,setListValidMoves,lastBoard,setLastBoard,color,game,setGame}}>
             {children}
         </UserContext.Provider>
     )

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { DragPreviewImage, useDrag } from 'react-dnd'
 import { useStateContext } from '../../context'
-import { ItemsTypes } from '../../../utils/constants';
 
 function Pieces({ piece, number }) {
 

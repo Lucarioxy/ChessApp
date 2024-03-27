@@ -1,8 +1,5 @@
 import { useStateContext } from '../../context';
-import {isEmpty, makeMove } from '../../../utils/gameLogic';
-import Pieces from './Pieces';
 import { useDrop } from 'react-dnd';
-import { ItemsTypes } from '../../../utils/constants';
 import TileInner from './TileInner';
 
 export default function Tile({ number ,children}) {
@@ -15,6 +12,9 @@ export default function Tile({ number ,children}) {
         const fromy = Math.floor(pickElement/8);
         const fromx = pickElement%8;
         const temp = [fromy,fromx,y,x];
+
+        if(color !== turn)
+            return false;
 
         listValidMoves.forEach(element => {
             let tem = true;
