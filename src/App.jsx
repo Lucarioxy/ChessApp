@@ -16,7 +16,7 @@ function App() {
       //   <button onClick={()=>setShowModal(true)} className="bg-violet-500 px-4 py-2 rounded-lg text-lg"> Create Game</button>
       // {showModal && <Waiting onClose={()=> setShowModal(false)}/>}
       // </div>
-      <Board/>
+      <HomePage/>
     );
 }
 export default App;
