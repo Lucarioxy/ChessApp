@@ -7,7 +7,7 @@ import GameEnd from './Components/Pages/GameEnd';
 import Waiting from './Components/Waiting';
 import { useState } from 'react';
 import HomePage from './Components/lobbypage/HomePage';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import { UserProvider } from '../context';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
       //   <button onClick={()=>setShowModal(true)} className="bg-violet-500 px-4 py-2 rounded-lg text-lg"> Create Game</button>
       // {showModal && <Waiting onClose={()=> setShowModal(false)}/>}
       // </div>
-      <Board/>
+      <HomePage/>
     );
 }
 export default App;
