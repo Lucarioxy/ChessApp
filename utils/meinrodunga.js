@@ -1,26 +1,26 @@
 // we will make a different function for checking for the castling move 
-// import readline from 'readline';
+import readline from 'readline';
 
-// const rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout
-// });
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
-// // Function to take array input
-// function takeArrayInput() {
-//     return new Promise((resolve, reject) => {
-//         rl.question('Enter array elements separated by spaces (or type "done" to exit): ', (input) => {
-//             if (input.toLowerCase() === 'done') {
-//                 rl.close();
-//             } else {
-//                 const array = input.split(' ').map(Number);
-//                 resolve(array);
-//             }
-//         });
-//     });
-// }
+// Function to take array input
+function takeArrayInput() {
+    return new Promise((resolve, reject) => {
+        rl.question('Enter array elements separated by spaces (or type "done" to exit): ', (input) => {
+            if (input.toLowerCase() === 'done') {
+                rl.close();
+            } else {
+                const array = input.split(' ').map(Number);
+                resolve(array);
+            }
+        });
+    });
+}
 
-export const deepEqual = (obj1, obj2)=> {
+ const deepEqual = (obj1, obj2)=> {
     if (obj1 === obj2) return true;
     if (typeof obj1 != "object" || typeof obj2 != "object" || obj1 == null || obj2 == null) return false;
     
@@ -36,7 +36,7 @@ export const deepEqual = (obj1, obj2)=> {
     return true;
 }
 
-export const makePiece = (name,color)=>{
+ const makePiece = (name,color)=>{
     let piece = {
         piece:name,
         color,
@@ -49,7 +49,7 @@ export const makePiece = (name,color)=>{
 let turn = 1;
 let gameState = 0;
 
-export let board = [
+ let board = [
     [makePiece('Rook',0),makePiece('Knight',0),makePiece('Bishop',0),makePiece('Queen',0),makePiece('King',0),makePiece('Bishop',0),makePiece('Knight',0),makePiece('Rook',0)],
     [makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0)],
     [{},{},{},{},{},{},{},{}],
@@ -60,7 +60,7 @@ export let board = [
     [makePiece('Rook',1),makePiece('Knight',1),makePiece('Bishop',1),makePiece('Queen',1),makePiece('King',1),makePiece('Bishop',1),makePiece('Knight',1),makePiece('Rook',1)],
 ]
 
-export let lastboard = [
+ let lastboard = [
     [makePiece('Rook',0),makePiece('Knight',0),makePiece('Bishop',0),makePiece('Queen',0),makePiece('King',0),makePiece('Bishop',0),makePiece('Knight',0),makePiece('Rook',0)],
     [makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0)],
     [{},{},{},{},{},{},{},{}],
@@ -71,7 +71,7 @@ export let lastboard = [
     [makePiece('Rook',1),makePiece('Knight',1),makePiece('Bishop',1),makePiece('Queen',1),makePiece('King',1),makePiece('Bishop',1),makePiece('Knight',1),makePiece('Rook',1)],
 ]
 
-export const printChessboard = (board) => {
+ const printChessboard = (board) => {
     let temp = '\t';
     for(let i=0;i<8;i++)
         temp += `${i}\t\t`;
@@ -90,17 +90,17 @@ export const printChessboard = (board) => {
     }
 }
 
-export const printArray = (array)=>{
+ const printArray = (array)=>{
     array.forEach((a)=>{
         console.log(a);
     })
 }
 
-export const validateBoundary = (pos)=>{
+ const validateBoundary = (pos)=>{
     return ((pos[0]>=0 && pos[0]<8 ) && (pos[1]>=0 && pos[1]<8));
 }
 
-export const isEmpty = (board,coordinates)=> (Object.keys(board[coordinates[0]][coordinates[1]]).length===0);
+ const isEmpty = (board,coordinates)=> (Object.keys(board[coordinates[0]][coordinates[1]]).length===0);
 
 // 0 is error 
 // 1 is enpassant 
@@ -108,7 +108,7 @@ export const isEmpty = (board,coordinates)=> (Object.keys(board[coordinates[0]][
 // 3 is castle 
 // 4 normal moves
 
-export const detectTypeOfMove = (board,lastboard,move,color)=>{
+ const detectTypeOfMove = (board,lastboard,move,color)=>{
     if(isEmpty(board,[move[0],move[1]]))
         return 0;
     let direction = (color)?(-1):(1);
@@ -125,7 +125,7 @@ export const detectTypeOfMove = (board,lastboard,move,color)=>{
     return 4;
 }
 
-export const makeMoveWithoutValidation = (board,lastboard,move,color)=>{    
+ const makeMoveWithoutValidation = (board,lastboard,move,color)=>{    
     let type = detectTypeOfMove(board,lastboard,move,color);
     switch(type){
         case 0:{
@@ -166,8 +166,8 @@ export const makeMoveWithoutValidation = (board,lastboard,move,color)=>{
     }
 }
 
-export const makeMove = (board , lastboard, move,color)=>{
-    const moveList = ListOnlyValidMove(board,lastboard,color);
+ const makeMove = (board , lastboard, move,color)=>{
+    const moveList = ListOnlyValidMove(board,color);
     for(let i =0;i<moveList.length;i++){
         let flag = true;
         for(let j = 0;j<4;j++)
@@ -181,7 +181,7 @@ export const makeMove = (board , lastboard, move,color)=>{
     return false;
 }
 
-export const checkforEnpassant = (board,lastboard,color)=>{
+ const checkforEnpassant = (board,lastboard,color)=>{
     
     let changeInBoard = new Array(4).fill(null);
     for(let i = 0;i<8;i++){
@@ -210,7 +210,7 @@ export const checkforEnpassant = (board,lastboard,color)=>{
     return toReturnArray;
 }
 
-export const UnCheckedMoves = (piece)=>{
+ const UnCheckedMoves = (piece)=>{
     switch(piece.piece){
         case 'Pawn':
             return (
@@ -325,7 +325,7 @@ export const UnCheckedMoves = (piece)=>{
     }
 }
 
-export const findAllUnvalidated = (board,lastboard,color)=>{
+ const findAllUnvalidated = (board,lastboard,color)=>{
     let moveArray = [];
     for(let i = 0;i<8;i++){
         for(let j=0;j<8;j++){
@@ -336,7 +336,7 @@ export const findAllUnvalidated = (board,lastboard,color)=>{
     return moveArray;
 }
 
-export const checkForCheck = (board,lastboard,color)=>{
+ const checkForCheck = (board,lastboard,color)=>{
     // suppose that we need to check for the check on the white king then.
     // find the position of white king first;
     let kingPos = [];
@@ -358,7 +358,7 @@ export const checkForCheck = (board,lastboard,color)=>{
     return flag;
 }
 
-export const checkForCastle = (board,lastboard,color)=>{
+ const checkForCastle = (board,color)=>{
     let row = (color)?(7):(0);
     let returnArray = [];
     if(isEmpty(board,[row,4]) || board[row][4].hasMoved)
@@ -387,7 +387,7 @@ export const checkForCastle = (board,lastboard,color)=>{
     return returnArray;
 } 
 
-export const funcValidateMove = (board,lastboard,move,color)=>{
+ const funcValidateMove = (board,move,color)=>{
     let dummyBoard =  board.map(row => row.map(obj => ({ ...obj })));
     let dummyLastBoard =  lastboard.map(row => row.map(obj => ({ ...obj })));
     makeMoveWithoutValidation(dummyBoard,dummyLastBoard,move,color);
@@ -396,9 +396,9 @@ export const funcValidateMove = (board,lastboard,move,color)=>{
     return true;
 }
 
-export const ListOnlyValidMove = (board,lastboard,color)=>{ 
-    const GoodMoves = findAllUnvalidated(board,lastboard,color).filter((moves)=> funcValidateMove(board,lastboard,moves,color));
-    const castleArray = checkForCastle(board,lastboard,color);
+ const ListOnlyValidMove = (board,color)=>{ 
+    const GoodMoves = findAllUnvalidated(board,lastboard,color).filter((moves)=> funcValidateMove(board,moves,color));
+    const castleArray = checkForCastle(board,color);
     const kingPos = (color)?([7,4]):([0,4]);
     if(castleArray.indexOf(1) !== -1)
         GoodMoves.push([...kingPos,kingPos[0],kingPos[1]-2]);
@@ -407,9 +407,9 @@ export const ListOnlyValidMove = (board,lastboard,color)=>{
     return GoodMoves;
 };
 
-export const checkForStalemate = (board,lastboard,color)=>(ListOnlyValidMove(board,lastboard,color).length===0);
+ const checkForStalemate = (board,color)=>(ListOnlyValidMove(board,color).length===0);
 
-export const restartGame = ()=>{
+const restartGame = ()=>{
     board = [
         [makePiece('Rook',0),makePiece('Knight',0),makePiece('Bishop',0),makePiece('Queen',0),makePiece('King',0),makePiece('Bishop',0),makePiece('Knight',0),makePiece('Rook',0)],
         [makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0),makePiece('Pawn',0)],
@@ -427,35 +427,36 @@ export const restartGame = ()=>{
 
 // have to implement a similar logic in the front end using event listeners
 // here completing the function for verification purpose 
-// const GameLogic = async ()=>{
-//     restartGame();
-//     let flag = true;
-//     while(flag){
-//         printChessboard(board);
-//         console.log("Turn is ",turn);
-//         console.log("Printing all the validating moves");
-//         printArray(ListOnlyValidMove(board,lastboard,turn));
-//         const arrays = await takeArrayInput();
-//         let dummyLastBoard = board.map(row => row.map(obj => ({ ...obj })));
-//         let verify  = makeMove(board,lastboard,arrays,turn);
-//         if(verify){
-//             turn = !turn;
-//             lastboard = dummyLastBoard;
-//             console.log("Verified");
-//         }
-//         else
-//             console.log("Some error occured");
-//         flag = !checkForStalemate(board,lastboard,turn);
-//         if(!flag){
-//             if(checkForCheck(board,turn))
-//                 console.log(`The Player ${!turn} Won`);
-//             else
-//                 console.log("Draww");
-//         }
-//     }
-//     printChessboard(board);
-//     console.log("Its Over")
-    
-// }
+const GameLogic = async ()=>{
+    restartGame();
+    let flag = true;
 
-// GameLogic();
+    while(flag){
+        printChessboard(board);
+        console.log("Turn is ",turn);
+        console.log("Printing all the validating moves");
+        printArray(ListOnlyValidMove(board,turn));
+        const arrays = await takeArrayInput();
+        let dummyLastBoard = board.map(row => row.map(obj => ({ ...obj })));
+        let verify  = makeMove(board,lastboard,arrays,turn);
+        if(verify){
+            turn = !turn;
+            lastboard = dummyLastBoard;
+            console.log("Verified");
+        }
+        else
+            console.log("Some error occured");
+        flag = !checkForStalemate(board,turn);
+        if(!flag){
+            if(checkForCheck(board,turn))
+                console.log(`The Player ${!turn} Won`);
+            else
+                console.log("Draww");
+        }
+    }
+    printChessboard(board);
+    console.log("Its Over")
+    
+}
+
+GameLogic();

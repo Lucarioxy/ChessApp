@@ -3,7 +3,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Img from './images/ChessIMG.jpg';
 import Img2 from './images/knight-logo.jpg';
-import { useStateContext } from "../../../context";
+import { useStateContext } from "../../context";
 
 function HomePage() {
     const [inputValue, setInputValue] = useState("");

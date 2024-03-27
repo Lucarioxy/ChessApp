@@ -1,14 +1,10 @@
 import React from 'react';
 //import Board from './Board';
 import './App.css';
-import Board from './Components/chessBoard/Board';
-import Modal from './Components/Pages/Modal';
-import GameEnd from './Components/Pages/GameEnd';
-import Waiting from './Components/Waiting';
-import { useState } from 'react';
 import HomePage from './Components/lobbypage/HomePage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { UserProvider } from '../context';
+import { UserProvider } from './context';
+import ActiveGame from './Components/Pages/ActiveGame';
 
 function App() {
   return (
@@ -17,7 +13,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/active-game" element={<Board />} />
+            <Route path="/active-game" element={<ActiveGame/>} />
           </Routes>
         </BrowserRouter>
       </UserProvider>
