@@ -5,6 +5,7 @@ import HomePage from './Components/lobbypage/HomePage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context';
 import ActiveGame from './Components/Pages/ActiveGame';
+import Board from './Components/chessBoard/Board';
 
 function App() {
   return (

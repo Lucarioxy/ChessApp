@@ -22,7 +22,7 @@ export default function Board() {
   }
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className='grid grid-cols-8 '>
+      <div className='grid grid-cols-8'>
         {board}
       </div>
     </DndProvider>

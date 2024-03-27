@@ -4,7 +4,7 @@ import Board from "../chessBoard/Board";
 import Timer from '../chessBoard/Timer';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import './ActiveGame.css';
 
 export default function ActiveGame() {
 
@@ -37,18 +37,26 @@ export default function ActiveGame() {
     return(
     <>
     {/* {(Overlayfunction()) && Overlayfunction()} */}
-      <div className="bg-yellow-500ChesBoard">
-        <div id="Board" className=" flex justify-center"><Board /></div>
-        <div className="absolute top-12 left-16">
+      <div className="bg-slate-900 ChesBoard">
+        <div id="Board" className="flex justify-center pt-16"><Board /></div>
+        <div>
+        <div className="flex flex-col absolute top-96 right-80">
+        <div className="absolute bottom-64 right-32 ">
+          <Timer seconds={120} />
+        </div>
+        <div className="absolute top-16 right-32">
           <Timer seconds={30} />
         </div>
-        <div className="absolute bottom-44 right-60">
-          <Timer seconds={30} />
         </div>
-        <div className="flex flex-col w-24 space-y-6 absolute bottom-96 right-0">
-          <button onClick={notify} className="bg-red-500 rounded text-black ">RESIGN</button>
-          <button onClick={notify1} className="bg-green-700 rounded text-black ">DRAW</button>
-
+        <div className="flex absolute items-centre space-x-10 right-56 bottom-72 ">
+          <button onClick={notify} className="bg-slate-500 rounded items-centre text-black "><span class="material-symbols-outlined">
+          flag
+          </span></button>
+          <button onClick={notify1} className="bg-slate-500 rounded items-centre text-black ">1/2</button>
+          <button onClick={notify} className="bg-slate-500 rounded items-centre text-black "><span class="material-symbols-outlined">
+           close
+          </span>   
+          </button>
           <ToastContainer
             position="top-center"
             autoClose={false}
@@ -61,7 +69,9 @@ export default function ActiveGame() {
             transition={Bounce}
           />
         </div>
-        // </div>
+        </div>
+        
+      </div>
     </>
     )
 }
