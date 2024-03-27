@@ -12,7 +12,7 @@ function App() {
       <UserProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePage/>} />
             <Route path="/active-game" element={<ActiveGame/>} />
           </Routes>
         </BrowserRouter>
