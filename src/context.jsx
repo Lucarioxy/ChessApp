@@ -14,7 +14,6 @@ export const UserProvider = ({children})=>{
     const [pickElement, setPickElement] = useState(0);
     const [dropDestination,setDropDestination] = useState(null);
     const [listValidMoves,setListValidMoves] = useState([]);
-    const [dummyStateForDestination,setDummyStateForDestination] = useState(true);
     const [game, setGame] = useState(1);
 
     useEffect(()=>{
@@ -26,7 +25,7 @@ export const UserProvider = ({children})=>{
     },[pickElement])
 
     useEffect(()=>{
-        if(dropDestination!==null && dropDestination!=-1){
+        if(dropDestination!==null){
         let dummyBoard = boardState.map(row => row.map(obj => ({ ...obj })));
         let dummyLastBoard = lastBoard.map(row => row.map(obj => ({ ...obj })));
         const temp = makeMove(dummyBoard,dummyLastBoard,[Math.floor(pickElement/8),pickElement%8,Math.floor(dropDestination/8),dropDestination%8],turn);
@@ -37,10 +36,10 @@ export const UserProvider = ({children})=>{
             setTurn(!turn);
         }
     }
-    },[dropDestination,dummyStateForDestination])
+    },[dropDestination])
 
     return (
-        <UserContext.Provider value={{color,timer,role,setColor,setTimer,setRole,boardState,setBoardState,pickElement,setPickElement,setDropDestination,dropDestination,turn,setTurn,listValidMoves,setListValidMoves,lastBoard,setLastBoard,color,game,setGame,dummyStateForDestination,setDummyStateForDestination}}>
+        <UserContext.Provider value={{color,timer,role,setColor,setTimer,setRole,boardState,setBoardState,pickElement,setPickElement,setDropDestination,dropDestination,turn,setTurn,listValidMoves,setListValidMoves,lastBoard,setLastBoard,color,game,setGame}}>
             {children}
         </UserContext.Provider>
     )

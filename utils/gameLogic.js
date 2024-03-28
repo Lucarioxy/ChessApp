@@ -226,11 +226,11 @@ export const UnCheckedMoves = (piece)=>{
                         }
                     }
                     // cutting move in diagonal
-                    if(validateBoundary([initialPos[0]+direction,initialPos[1]+direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]+direction]) && board[initialPos[0]+direction][initialPos[1]+direction].color!=board[initialPos[0]][initialPos[1]].color){
+                    if(validateBoundary([initialPos[0]+direction,initialPos[1]+direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]+direction]) && board[initialPos[0]+direction][initialPos[1]+direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]+direction]);
                     }
                     // cutting move in diagonal
-                    if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction][initialPos[1]-direction].color!=board[initialPos[0]][initialPos[1]].color){
+                    if(validateBoundary([initialPos[0]+direction,initialPos[1]-direction]) && !isEmpty(board,[initialPos[0]+direction,initialPos[1]-direction]) && board[initialPos[0]+direction][initialPos[1]-direction].color!==board[initialPos[0]][initialPos[1]].color){
                         movesArray.push([...initialPos,initialPos[0]+direction,initialPos[1]-direction]);
                     }
 
@@ -253,6 +253,8 @@ export const UnCheckedMoves = (piece)=>{
                             else if(validateBoundary([initialPos[0]+direction[j]*i,initialPos[1]+direction[j+1]*i]) && !isEmpty(board,[initialPos[0]+direction[j]*i,initialPos[1] + direction[j+1]*i])){
                                 if(board[initialPos[0]][initialPos[1]].color != board[initialPos[0]+direction[j]*i][initialPos[1]+direction[j+1]*i].color){
                                     movesArray.push([...initialPos,initialPos[0]+direction[j]*i,initialPos[1]+direction[j+1]*i])
+                                    console.log([...initialPos,initialPos[0]+direction[j]*i,initialPos[1]+direction[j+1]*i],board[initialPos[0]][initialPos[1]].color,board[initialPos[0]+direction[j]*i][initialPos[1]+direction[j+1]*i].color)
+                                    console.log("DID IT PUSH")
                                 }
                                 break;
                             }
@@ -274,7 +276,7 @@ export const UnCheckedMoves = (piece)=>{
                         for(let i=1;i<8;i++){
                             if(validateBoundary([initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]) && isEmpty(board,[initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]))
                                 movesArray.push([...initialPos,initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]);
-                            else if(validateBoundary[[initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]] && !isEmpty(board,[initialPos[0]+direction[j]*i,initialPos[1] + direction[j+1]*i])){
+                            else if(validateBoundary[[initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]]){
                                 if(board[initialPos[0]][initialPos[1]].color != board[initialPos[0] + direction[2*j]*i][initialPos[1]+direction[2*j+1]*i].color)
                                     movesArray.push([...initialPos,initialPos[0]+direction[2*j]*i,initialPos[1]+direction[2*j+1]*i]);
                                 break;  

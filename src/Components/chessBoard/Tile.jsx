@@ -3,7 +3,7 @@ import { useDrop } from 'react-dnd';
 import TileInner from './TileInner';
 
 export default function Tile({ number ,children}) {
-    const { pickElement,listValidMoves , setDropDestination ,color,turn,setDummyStateForDestination} = useStateContext();
+    const { pickElement,listValidMoves , setDropDestination ,color,turn} = useStateContext();
 
     const onDropping = async ()=>{
         // console.log("The function was triggered");s
@@ -29,7 +29,8 @@ export default function Tile({ number ,children}) {
     }
 
     const onDrop = async()=>{
-        setDummyStateForDestination(prevState => !prevState);
+        // here what happens when we can make moves ?? 
+        console.log("It Dropped");
         setDropDestination(number);
     }
     
