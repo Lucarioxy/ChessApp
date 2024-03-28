@@ -1,7 +1,7 @@
-/* #Board {
+#Board {
     display: grid;
     grid-template-columns: repeat(8, 85px);
     grid-template-rows: repeat(8, 85px);
     width: 700px;
     height: 600px;
-} */
+}
