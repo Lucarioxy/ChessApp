@@ -12,7 +12,10 @@ function Pieces({ piece, number }) {
 
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: 'piece',
-    item: { id: piece.id, type: 'piece'},
+    item: ()=>{
+      startDrag();
+      return { id: piece.id, type: 'piece'};
+    },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging()
     }),
@@ -27,18 +30,13 @@ function Pieces({ piece, number }) {
     }
   }));
 
-  useEffect(()=>{
-    if(isDragging){
-      startDrag();
-    }
-  },[isDragging])
-  
+
 
   return (
     <>
       <DragPreviewImage key={new Date().getTime()} connect={preview} src={piece.previewimg} />
-      <div ref={drag} className='h-full w-full cursor-move'>
-        <img src={piece.image} className={`opacity-${(isDragging) ? ('50') : ('100')}`} />
+      <div  className='h-full w-full cursor-move'>
+        <img ref={drag} src={piece.image} className={`opacity-${(isDragging) ? ('50') : ('100')} w-6/12 h-6/12`} />
       </div>
     </>
   )
