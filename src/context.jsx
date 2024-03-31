@@ -29,7 +29,21 @@ export const UserProvider = ({children})=>{
         if(dropDestination!==null ){
         let dummyBoard = boardState.map(row => row.map(obj => ({ ...obj })));
         let dummyLastBoard = lastBoard.map(row => row.map(obj => ({ ...obj })));
-        const temp = makeMove(dummyBoard,dummyLastBoard,[Math.floor(pickElement/8),pickElement%8,Math.floor(dropDestination/8),dropDestination%8],turn);
+        let x1, y1, x2, y2;
+if (turn) {
+    x1 = Math.floor(pickElement / 8);
+    y1 = pickElement % 8;
+    x2 = Math.floor(dropDestination / 8);
+    y2 = dropDestination % 8;
+} else {
+    x1 = 7 - Math.floor(pickElement / 8);
+    y1 = 7 - (pickElement % 8);
+    x2 = 7 - Math.floor(dropDestination / 8);
+    y2 = 7 - (dropDestination % 8);
+}
+
+const temp = makeMove(dummyBoard, dummyLastBoard, [x1, y1, x2, y2], turn);
+
         console.log(temp,turn,[Math.floor(pickElement/8),pickElement%8,Math.floor(dropDestination/8),dropDestination%8]);
         if(temp){
             setLastBoard(dummyLastBoard);
