@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
+import socket from "../../../utils/socket";
 import Img from './images/ChessIMG.jpg';
 import Img2 from './images/knight-logo.jpg';
 import { useStateContext } from "../../context";
@@ -8,15 +8,37 @@ import { useStateContext } from "../../context";
 function HomePage() {
     const [inputValue, setInputValue] = useState("");
     const [show, setShow] = useState(false);
-
+    const [username, setUsername] = useState('');
+    const [usernameSubmitted, setUsernameSubmitted] = useState(false);
+    const [createGame, setCreateGame] = useState(false);
+    const [roomKey, setRoomKey] = useState('');
+    const [roomInput, setRoomInput] = useState('');
     const ShowRoom = () => {
         setShow(!show);
     }
 
-    const generateRoomKey = () => {
-        // Logic to generate room key goes here
-        const roomKey = "GeneratedRoomKey"; // Example room key, replace with actual generation logic
-        setInputValue(roomKey);
+    // Handle username submission
+    const handleUsernameSubmit = () => {
+        if (!username) return; 
+        socket.emit("username", username); 
+        
+        setUsernameSubmitted(true);
+    }
+
+    const handleJoinRoom = () => {
+        if (!roomInput) return; 
+        socket.emit("joinRoom", { roomId: roomInput }, (r) => {
+            // r is the response from the server
+            if (r.error) {
+                setRoomError(r.message); 
+                return;
+            }
+            console.log("response:", r);
+            // setRoom(r?.roomId); // set room to the room ID
+            // setPlayers(r?.players); // set players array to the array of players in the room
+            // setOrientation("black"); // set orientation as black
+            // setRoomDialogOpen(false); // close dialog
+        });
     }
 
     return (
@@ -30,39 +52,53 @@ function HomePage() {
                         <h1 className="text-white relative left-10 top-0 text-4xl ">Play Chess!</h1>
                         <button className="bg-violet-800 rounded-md h-12 mx-8 w-48 text-xl hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300">Play Online</button>
 
-                        <button onClick={ShowRoom} className="bg-violet-800 rounded-md h-12 mx-8 w-48 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 ">Create Custom Game</button>
+                        <button onClick={() => {
+                            setShow(true);
+                            setCreateGame(true);
+                        }} className="bg-violet-800 rounded-md h-12 mx-8 w-48 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 ">Create Custom Game</button>
+                        
                         {show && (
                             <div className='flex flex-col px-2'>
-                                <div className="flex items-center">
-                                    <input className='text-black text-center w-36 flex'
-                                        type="text"
-                                        placeholder="Copy Room Id"
-                                        value={inputValue}
-                                        onChange={e => setInputValue(e.target.value)}
-
-                                    />
-                                    <CopyToClipboard text={inputValue}>
-                                        <button className='ml-2  py-2 '>Copy</button>
-                                    </CopyToClipboard>
-                                    <div className=" mb-2">
-                                    <button className="mt-2 px-4 py-2  " onClick={generateRoomKey}>Key</button>
-
+                                {!usernameSubmitted && (
+                                    <div className="flex items-center">
+                                        <input
+                                            className='text-black text-center w-36 flex'
+                                            type="text"
+                                            placeholder="Enter your username"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)} 
+                                        />
+                                        <button onClick={handleUsernameSubmit} className="ml-2 py-2">Submit</button>
                                     </div>
-
-                                </div>
-                                
-                                <div className="flex items-center mt-2">
-                                    <input className='text-black text-center w-48 flex'
-                                        type="text"
-                                        placeholder="Paste Room Id from here"
-                                    />
-                                </div>
-                                <div className="px-12 mt-2">
-                                <button className='ml-2 px-4 py-2 bg-violet-800 rounded-md h-12 mx-8 w-36 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 '>Join Game</button>
-
-                                </div>
-
-                                {/* Generate Room Key Button */}
+                                )}
+                                {usernameSubmitted && createGame && (
+                                    <button 
+                                        onClick={() => {
+                                            // Emit createRoom event to the server
+                                            socket.emit("createRoom", (r) => {
+                                                console.log(r);
+        
+                                               //setRoom(r); // Set the received room key
+                                                
+                                            });
+                                        }} 
+                                        className='ml-2 px-4 py-2 bg-violet-800 rounded-md h-12 mx-8 w-36 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 '
+                                    >
+                                        Create room
+                                    </button>
+                                )}
+                                {usernameSubmitted && (
+                                    <div>
+                                        <input
+                                            className='text-black text-center w-48 flex mt-2'
+                                            type="text"
+                                            placeholder="Enter room key"
+                                            value={roomInput} 
+                                            onChange={(e) => setRoomInput(e.target.value)} 
+                                        />
+                                        <button onClick={handleJoinRoom} className='ml-2 px-4 py-2 bg-violet-800 rounded-md h-12 mx-8 w-36 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 '>Join Game</button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

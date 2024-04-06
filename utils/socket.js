@@ -1,6 +1,5 @@
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client"; // import connection function
 
-// "undefined" means the URL will be computed from the `window.location` object
-const URL = 'http://localhost:3000';
+const socket = io('localhost:8080'); // initialize websocket connection
 
-export const socket = io(URL);
+export default socket;
