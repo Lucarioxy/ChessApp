@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import socket from "../../../utils/socket";
-import Img from './images/ChessIMG.jpg';
+import Img from './images/ChessIMG.jpg'; // original
 import Img2 from './images/knight-logo.jpg';
 import { useStateContext } from "../../context";
-
+import Img3 from './images/chess_image.jpg';
+import Img4 from './images/chess_image2.jpg';
+import Img5 from './images/chess_image4.webp';
+import Img6 from './images/chess_image5.jpg';
+import './HomePage.css';
 function HomePage() {
     const [inputValue, setInputValue] = useState("");
     const [show, setShow] = useState(false);
@@ -40,26 +44,26 @@ function HomePage() {
             // setRoomDialogOpen(false); // close dialog
         });
     }
-
+    //'https://media.geeksforgeeks.org/wp-content/uploads/rk.png'
     return (
-        <div className="bg-black flex relative">
-            <img src={Img} alt="" className="object-cover h-130 w-240 py-32" />
-            <div className="flex flex-col static">
-                <h1 className="text-orange-500 my-4 mx-7 text-8xl">Knight's Quest</h1>
-                <img src={Img2} className="size-20 absolute right-8 top-8" alt="" />
-                <div className="mx-48 my-24 absolute right-32 top-24">
-                    <div className="text-white flex flex-col space-y-5 bg-zinc-800 h-96 w-64 justify-center rounded-md">
-                        <h1 className="text-white relative left-10 top-0 text-4xl ">Play Chess!</h1>
-                        <button className="bg-violet-800 rounded-md h-12 mx-8 w-48 text-xl hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300">Play Online</button>
-
+        <div  className ="bg-hero-pattern bg-cover bg-center min-h-screen flex flex-col justify-center">
+           {/* <img src={Img6} alt="" className=""/> */}
+           <h1 className=" text-white text-8xl flex justify-center gotu-regular">Knight's Quest</h1>
+            <div className="flex justify-center items-center">
+                <div className="flex justify-center">
+                    <div className="text-white flex flex-col space-y-5 bg-zinc-900 bg-opacity-75 h-96 w-64 justify-center rounded-md">
+                        <h1 className="text-white flex justify-center text-4xl ">Play Chess!</h1>
+                        <button className="bg-gray-600 rounded-md h-12 mx-8 w-48 text-xl hover:bg-gray-500 
+                        active:bg-yellow-700 focus:outline-none focus:ring focus:ring-yellow-800">Play Online</button>
                         <button onClick={() => {
                             setShow(true);
                             setCreateGame(true);
-                        }} className="bg-violet-800 rounded-md h-12 mx-8 w-48 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 ">Create Custom Game</button>
+                        }} className="bg-gray-800 rounded-md h-12 mx-8 w-48 hover:bg-gray-600
+                         active:bg-yellow-700 focus:outline-none focus:ring focus:ring-yellow-600 ">Create Custom Game</button>
                         
                         {show && (
                             <div className='flex flex-col px-2'>
-                                {!usernameSubmitted && (
+                                 {!usernameSubmitted && (
                                     <div className="flex items-center">
                                         <input
                                             className='text-black text-center w-36 flex'
@@ -70,8 +74,8 @@ function HomePage() {
                                         />
                                         <button onClick={handleUsernameSubmit} className="ml-2 py-2">Submit</button>
                                     </div>
-                                )}
-                                {usernameSubmitted && createGame && (
+                                 )}
+                                 {usernameSubmitted && createGame && (
                                     <button 
                                         onClick={() => {
                                             // Emit createRoom event to the server
@@ -86,8 +90,8 @@ function HomePage() {
                                     >
                                         Create room
                                     </button>
-                                )}
-                                {usernameSubmitted && (
+                                 )}
+                                 {usernameSubmitted && (
                                     <div>
                                         <input
                                             className='text-black text-center w-48 flex mt-2'
@@ -99,11 +103,11 @@ function HomePage() {
                                         <button onClick={handleJoinRoom} className='ml-2 px-4 py-2 bg-violet-800 rounded-md h-12 mx-8 w-36 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 '>Join Game</button>
                                     </div>
                                 )}
-                            </div>
-                        )}
+                             </div>
+                         )}
                     </div>
-                </div>
-            </div>
+                 </div> 
+            </div> 
         </div>
     );
 }
